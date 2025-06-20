@@ -20,19 +20,8 @@
   "author": "",
   "license": "ISC",
   "type": "module",
-  "dependencies": {
-    "@fastify/cors": "^11.0.0",
-    "@fastify/swagger": "^9.4.2",
-    "@fastify/swagger-ui": "^5.2.2",
-    "csv-stringify": "^6.5.2",
-    "drizzle-orm": "^0.41.0",
-    "fastify": "^5.2.1",
-    "fastify-type-provider-zod": "^4.0.2",
-    "postgres": "^3.4.5",
-    "uuidv7": "^1.0.2",
-    "zod": "^3.24.2"
-  },
-  "devDependencies": {
+    "devDependencies": {
+    "@biomejs/biome": "1.9.4",
     "@faker-js/faker": "^9.6.0",
     "@types/node": "^22.13.13",
     "dotenv-cli": "^8.0.0",
@@ -40,7 +29,25 @@
     "tsx": "^4.19.3",
     "typescript": "^5.8.2",
     "vite-tsconfig-paths": "^5.1.4",
-    "vitest": "^3.0.9",
-     "tsup": "^8.5.0"
+    "vitest": "^3.0.9"
+  },
+  "dependencies": {
+    "@aws-sdk/client-s3": "^3.779.0",
+    "@aws-sdk/lib-storage": "^3.779.0",
+    "@fastify/cors": "^11.0.0",
+    "@fastify/multipart": "^9.0.3",
+    "@fastify/swagger": "^9.4.2",
+    "@fastify/swagger-ui": "^5.2.2",
+    "@opentelemetry/api": "^1.9.0",
+    "@opentelemetry/auto-instrumentations-node": "^0.60.0",
+    "csv-stringify": "^6.5.2",
+    "dayjs": "^1.11.13",
+    "drizzle-orm": "^0.41.0",
+    "fastify": "^5.2.1",
+    "fastify-type-provider-zod": "^4.0.2",
+    "postgres": "^3.4.5",
+    "tsup": "^8.4.0",
+    "uuidv7": "^1.0.2",
+    "zod": "^3.24.2"
   }
 }

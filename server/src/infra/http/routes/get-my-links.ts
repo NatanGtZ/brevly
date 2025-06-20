@@ -1,8 +1,5 @@
 import { getLinks } from "@/app/functions/get-links";
-import { create } from "domain";
-import { or } from "drizzle-orm";
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod"
-import { access } from "fs";
 import z from "zod"
 
 
@@ -20,7 +17,7 @@ export const getMyLinks: FastifyPluginAsyncZod = async server => {
                   id: z.string(),
                   originalLink: z.string(),
                   shortLink: z.string(),
-                  accesses: z.string(),
+                  accesses: z.number(),
                   createdAt: z.date(),
                 })
               )

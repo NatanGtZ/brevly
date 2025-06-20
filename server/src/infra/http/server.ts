@@ -8,6 +8,7 @@ import { getMyLinks } from "./routes/get-my-links";
 import { deleteLinks } from "./routes/delete-link";
 import { transformSwaggerSchema } from "./transformSwaggerSchema";
 import { redirectToOriginalLink } from "./routes/redirect-to-original-link";
+import { exportToCSV } from "./routes/download-csv";
 
 
 const server = fastify().withTypeProvider<ZodTypeProvider>();
@@ -48,8 +49,12 @@ server.register(postNewLink);
 server.register(getMyLinks);
 server.register(deleteLinks);
 server.register(redirectToOriginalLink);
+server.register(exportToCSV);
 
 server.listen({ port: 3333, host: '0.0.0.0' }).then(() => {
   console.log('HTTP Server running!')
 })
+
+
+
 

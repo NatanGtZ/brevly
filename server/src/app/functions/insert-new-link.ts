@@ -4,7 +4,7 @@ import z from "zod";
 
 const insertNewLinkInput = z.object({
   original_url: z.string().url(),
-  short_url: z.string().url(),
+  short_url: z.string(),
   accesses: z.number().default(0),
 })
 
@@ -17,6 +17,6 @@ export async function insertNewLink(input : insertNewLinkInput) {
   return await db.insert(schema.links).values({
     originalLink: original_url,
     shortLink: short_url,
-    accesses: accesses.toString(),
+    accesses: accesses,
   })
 }

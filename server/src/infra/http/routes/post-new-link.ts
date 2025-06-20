@@ -13,7 +13,7 @@ export const postNewLink: FastifyPluginAsyncZod = async server => {
           tags: ['links'],
           body: z.object({
             original_url: z.string().url(),
-            short_url: z.string().url(),
+            short_url: z.string(),
             accesses: z.number().default(0),
           }),
           response: {
@@ -25,11 +25,11 @@ export const postNewLink: FastifyPluginAsyncZod = async server => {
       },
       async (request,  reply) => {
 
-        if(hasInvalidCharacters(request.body.short_url)) {
-          return reply.status(400).send({
-            message: 'Invalid characters in short URL',
-          });
-        }
+        // if(hasInvalidCharacters(request.body.short_url)) {
+        //   return reply.status(400).send({
+        //     message: 'Invalid characters in short URL',
+        //   });
+        // }
 
         var getLinkIfExists = await db.query.links.findFirst({
             where: (links, { eq }) => eq(links.shortLink,   request.body.short_url),
@@ -47,8 +47,6 @@ export const postNewLink: FastifyPluginAsyncZod = async server => {
           short_url: request.body.short_url,
           accesses: request.body.accesses,
         })
-
-        console.log(result);
         
         return reply.status(201).send({
           message: 'Link created successfully',

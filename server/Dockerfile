@@ -1,4 +1,4 @@
-FROM node:24.2.0-slim AS base
+FROM node:22.16.0 AS base
 
 FROM base AS dependencies
 
@@ -19,7 +19,7 @@ RUN npm i tsup
 RUN npm run build
 RUN npm prune --prod
 
-FROM node:24.2.0-alpine3.22 AS deploy
+FROM node:22-alpine3.21 AS deploy
 
 USER 1000
 

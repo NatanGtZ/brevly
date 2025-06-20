@@ -4,6 +4,8 @@ services:
     container_name: brev.ly
     ports:
       - '3000:3333'
+    env_file:
+      - .env
     environment:
       - CLOUDFLARE_ACCOUNT_ID=$CLOUDFLARE_ACCOUNT_ID
       - CLOUDFLARE_ACCESS_KEY_ID=$CLOUDFLARE_ACCESS_KEY_ID

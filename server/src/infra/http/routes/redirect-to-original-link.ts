@@ -1,5 +1,5 @@
-import { db } from "@/infra/db";
-import { schema } from "@/infra/db/schemas";
+import { AppError } from "@/app/errors/AppError";
+import { sendToOriginalLink } from "@/app/functions/send-to-original-link";
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
 import z from "zod";
 
@@ -21,18 +21,16 @@ export const redirectToOriginalLink: FastifyPluginAsyncZod = async (server) => {
       },
     },
     async (request, reply) => {
-       const result = await db.query.links.findFirst({
-          where: (link, { eq }) => eq(schema.links.shortLink, 'http://localhost:3333/' + request.params.shortLink),
-        });
 
-    if (!result) {
-      return reply.code(404).send({ message: 'Link não encontrado' });
-    }
+      let result = await sendToOriginalLink(request.params.shortLink);
+      
+      if(result instanceof AppError){
+        return reply
+          .status(result.statusCode)
+          .send({ message: result.message});
+      }
 
-    if (result.originalLink === null) {
-      return reply.code(400).send({ message: 'Link inválido' });
-    }
-    return reply.redirect(result.originalLink);
+      return reply.redirect(result.originalLink);
     }
   )
 }
