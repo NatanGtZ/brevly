@@ -1,5 +1,6 @@
 import { Copy, Trash } from "phosphor-react";
 import { DeleteALink } from "../http/delete-a-link";
+import { RedirectToOriginalLink } from "../http/redirect-to-original-link";
 
 interface LinkProps {
   id: string;
@@ -8,10 +9,23 @@ interface LinkProps {
   accesses: number;
 }
 
-
 export function MyLinksItemComponent({id, originalLink, shortLink, accesses }: LinkProps) {
-
   const link = `http://localhost:3333${shortLink}`;
+  
+  const handleRedirect = async () => {
+    try{
+      const response = await RedirectToOriginalLink("/inst");
+      if(response.status == 200) {
+        window.open(response.data.originalLink, "_blank");
+      }
+      if(response.data.statusCode == 404) {
+        window.location.href = "../pages/404-page.tsx";
+      }
+    } catch {
+      window.location.href = "../pages/404-page";
+    }
+  }
+
 
   function handleCopy() {
     navigator.clipboard.writeText(link);
@@ -21,7 +35,7 @@ export function MyLinksItemComponent({id, originalLink, shortLink, accesses }: L
     <li id={id} className="flex flex-2 justify-between border-t-1 border-gray-200 py-4">
       <div className="flex flex-row w-full">
         <div className="w-[300px] flex flex-col">
-          <span className="text-md text-blue-base font-semibold w-[280px]"><a href={link} target="blank">http://localhost:3333{shortLink}</a></span>
+          <span className="text-md text-blue-base font-semibold w-[280px]"><a href="#" onClick={(e) => {e.preventDefault(); handleRedirect()}} target="blank">http://localhost:3333{shortLink}</a></span>
           <span className="text-sm text-gray-500 truncate w-[280px]">{originalLink}</span>
         </div>
         <div className="flex-2 flex flex-row justify-end items-center gap-1">
@@ -41,5 +55,6 @@ export function MyLinksItemComponent({id, originalLink, shortLink, accesses }: L
         </div>
       </div>
     </li>
+
   )
 }

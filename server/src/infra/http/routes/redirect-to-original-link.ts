@@ -1,7 +1,7 @@
 import { AppError } from "@/app/errors/AppError";
 import { sendToOriginalLink } from "@/app/functions/send-to-original-link";
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
-import z from "zod";
+import z, { ostring } from "zod";
 
 export const redirectToOriginalLink: FastifyPluginAsyncZod = async (server) => {
   server.get(
@@ -14,9 +14,14 @@ export const redirectToOriginalLink: FastifyPluginAsyncZod = async (server) => {
           shortLink: z.string().min(1),
         }),
         response: {
-            200: z.object({
-              message: z.string(),
-            }),
+          404: z.object({
+            message: z.string(),
+            status: z.number(),
+          }),
+          200: z.object({
+            originalLink: z.string(),
+            status: z.number(),
+          }),
           },
       },
     },
@@ -26,11 +31,11 @@ export const redirectToOriginalLink: FastifyPluginAsyncZod = async (server) => {
       
       if(result instanceof AppError){
         return reply
-          .status(result.statusCode)
-          .send({ message: result.message});
+          .status(404)
+          .send({ message: result.message, status: 404 });
       }
 
-      return reply.redirect(result.originalLink);
+      return reply.status(200).send({ originalLink: result.originalLink, status: 200 });
     }
   )
 }

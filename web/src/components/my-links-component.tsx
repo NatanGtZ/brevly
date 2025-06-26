@@ -15,7 +15,7 @@ export function MyLinksComponent() {
     }
 
     fetchLinks();
-  }, []);
+  }, [links]);
 
   return(
     <div className="flex-2 bg-white shadow rounded-2xl p-6">
