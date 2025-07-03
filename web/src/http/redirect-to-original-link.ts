@@ -8,7 +8,7 @@ export interface RedirectResponseProps {
 
 
 export async function RedirectToOriginalLink(short: string){
-  const response = await axios.get<RedirectResponseProps>(`http://localhost:3333${short}`);
-  console.log(response);
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
+  const response = await axios.get<RedirectResponseProps>(`${baseUrl}${short}`);
   return response;
 }

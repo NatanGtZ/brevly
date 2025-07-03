@@ -10,7 +10,8 @@ export interface LinksParams {
 }
 
 export async function GetLinks(){
-  const response = await axios.get('http://localhost:3333/myLinks');
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
+  const response = await axios.get(`${baseUrl}/myLinks`);
   
   // console.log(response.data)
   return response.data.links;

@@ -7,8 +7,8 @@ export interface LinksParams {
 }
 
 export async function InsertNewLink({originalUrl, shortUrl}: LinksParams){
-  console.log(originalUrl, shortUrl);
-  const response = await axios.post('http://localhost:3333/new-link', {
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
+  const response = await axios.post(`${baseUrl}/new-link`, {
     original_url: originalUrl,
     short_url: shortUrl,
   });

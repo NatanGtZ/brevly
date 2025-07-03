@@ -3,7 +3,8 @@ import axios from "axios";
 
 
 export async function DeleteALink(linkId: string){
-  const response = await axios.delete(`http://localhost:3333/delete-link/${linkId}`);
+  const baseUrl = import.meta.env.VITE_BACKEND_URL;
+  const response = await axios.delete(`${baseUrl}/delete-link/${linkId}`);
   console.log(response.data)
   return response.data;
 }

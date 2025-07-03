@@ -11,7 +11,7 @@ export function NewLinkComponent() {
   const [errors, setErrors] = useState("");
 
   const handleInsertNewLink = async (originalLink : string, shortLink: string) => {
-    const sanitizedShortLink = shortLink.slice(prefix.length -1);
+    const sanitizedShortLink = shortLink.slice(prefix.length -1).replace(/\s+/g, '');
 
     if (!isValidUrl(originalLink)) {
       setErrors('Url inválida');
@@ -19,7 +19,6 @@ export function NewLinkComponent() {
     }
 
     const response = await InsertNewLink({ originalUrl: originalLink.toString(), shortUrl: sanitizedShortLink.toString()});
-    console.log(response);
     if(response.message === 'Link created successfully') {
       setShortLink(prefix);
       setOriginalLink("");
