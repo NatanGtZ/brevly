@@ -1,7 +1,7 @@
 import { AppError } from "@/app/errors/AppError";
 import { sendToOriginalLink } from "@/app/functions/send-to-original-link";
 import { FastifyPluginAsyncZod } from "fastify-type-provider-zod";
-import z, { ostring } from "zod";
+import z from "zod";
 
 export const redirectToOriginalLink: FastifyPluginAsyncZod = async (server) => {
   server.get(

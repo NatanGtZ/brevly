@@ -13,18 +13,16 @@ interface LinkProps {
 
 export function MyLinksItemComponent({id, originalLink, shortLink, accesses }: LinkProps) {
   const [copied, setCopied] = useState(false);
-  const baseUrl = import.meta.env.VITE_BACKEND_URL;
+  const baseUrl = import.meta.env.VITE_FRONTEND_URL;
+  const linktoCopy = baseUrl + shortLink;
   const setPage = useSetPage((s) => s.setPage);
-  const setOriginalLink = useSetPage((s) => s.setOriginalLink);
   const originalLinkView = originalLink.slice(0, 30) + "..." ;
   
   const handleRedirect = async () => {
     try{
       const response = await RedirectToOriginalLink(shortLink);
       if(response.status == 200) {
-        setPage('redirecting')
-        setOriginalLink(originalLink)
-        window.location.href = originalLink
+        window.open(baseUrl + shortLink, '_blank');
       }
       if(response.data.statusCode == 404) {
         setPage('notFound')
@@ -36,7 +34,7 @@ export function MyLinksItemComponent({id, originalLink, shortLink, accesses }: L
 
 
   function handleCopy() {
-    navigator.clipboard.writeText(originalLink);
+    navigator.clipboard.writeText(linktoCopy);
     setCopied(true);
     setTimeout(() => {
       setCopied(false);

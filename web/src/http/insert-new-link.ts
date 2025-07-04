@@ -12,6 +12,5 @@ export async function InsertNewLink({originalUrl, shortUrl}: LinksParams){
     original_url: originalUrl,
     short_url: shortUrl,
   });
-  
   return response.data;
 }

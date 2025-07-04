@@ -40,7 +40,8 @@ export function MyLinksComponent() {
         <h2 className="text-lg font-semibold text-gray-600">Meus links</h2>
         <button
           onClick={HandleDownload}
-          className="flex items-center gap-2 text-sm border border-transparent text-gray-500 bg-gray-200 rounded-sm p-2 cursor-pointer hover:border hover:border-blue-base"
+          disabled={loading}
+          className="disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 text-sm border border-transparent text-gray-500 bg-gray-200 rounded-sm p-2 cursor-pointer hover:border hover:border-blue-base"
         >
           {loading &&
             <CircleNotch size={16} className="animate-spin text-gray-600" />

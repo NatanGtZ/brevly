@@ -1,29 +1,53 @@
-import { Warning } from "phosphor-react";
 import { InsertNewLink } from "../http/insert-new-link";
 import { useState } from "react";
 import { NewLinkInput } from "./new-link-input";
+import toast from "react-hot-toast";
 
 
 export function NewLinkComponent() {
-  const prefix = 'localhost:3333/';
-  const [shortLink, setShortLink] = useState(prefix);
+  const [shortLink, setShortLink] = useState("");
   const [originalLink, setOriginalLink] = useState("");
-  const [errors, setErrors] = useState("");
+  const [errors, setErrors] = useState({
+    original: "",
+    short: "",
+  });
+  const [saving, setSaving] = useState(false);
 
-  const handleInsertNewLink = async (originalLink : string, shortLink: string) => {
-    const sanitizedShortLink = shortLink.slice(prefix.length -1).replace(/\s+/g, '');
+  const handleInsertNewLink = async (originalLink: string, shortLink: string) => {
+    const error = {original: "", short: ""};
+    const regex = /^[a-zA-Z0-9_-]+$/;
+    const isValid = regex.test(shortLink); 
 
     if (!isValidUrl(originalLink)) {
-      setErrors('Url inválida');
+      error.original = 'Url inválida';
+    }
+    if(!isValid) {
+      error.short ='Informe uma url minúscula e sem espaços/caractere especial';
+    }
+
+    if(error.original || error.short) {
+      setErrors(error);
       return;
     }
 
-    const response = await InsertNewLink({ originalUrl: originalLink.toString(), shortUrl: sanitizedShortLink.toString()});
-    if(response.message === 'Link created successfully') {
-      setShortLink(prefix);
+    setSaving(true) 
+    const response = await InsertNewLink({
+      originalUrl: originalLink.toString(),
+      shortUrl: '/' + shortLink.toString()
+    });
+
+    if (response.message === 'Link created successfully') {
+      setShortLink("");
       setOriginalLink("");
+      setSaving(false) 
+      setErrors({original: "", short: ""});
     }
-  }
+
+    if (response.message === 'Link already exists') {
+      toast.error('URL encurtada já existe');
+      setSaving(false) 
+    }
+  };
 
   function isValidUrl(url: string): boolean {
     try {
@@ -32,40 +56,10 @@ export function NewLinkComponent() {
     } catch {
       return false;
     }
-}
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const inputValue = e.target.value;
-    if (!inputValue.startsWith(prefix)) return;
-  
-    setShortLink(inputValue);
-  };
-
-  const handleCursor = (e: React.MouseEvent<HTMLInputElement, MouseEvent>) => {
-    const input = e.currentTarget;
-
-    if (input.selectionStart! < prefix.length) {
-      input.setSelectionRange(prefix.length, prefix.length);
-    }
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const input = e.currentTarget;
-
-    if (
-      input.selectionStart === prefix.length &&
-      input.selectionEnd === prefix.length &&
-      e.key === 'Backspace'
-    ) {
-      e.preventDefault();
-    }
-
-    if (
-      ['ArrowLeft', 'Home'].includes(e.key) &&
-      input.selectionStart === prefix.length
-    ) {
-      e.preventDefault();
-    }
+    setShortLink(e.target.value);
   };
 
   return(
@@ -78,28 +72,23 @@ export function NewLinkComponent() {
               placeholder="www.exemplo.com.br"
               onChange={(e) => setOriginalLink(e.target.value)}
               type="text"
-              errorMessage={errors}
+              errorMessage={errors.original}
             />
             <NewLinkInput
               label="LINK ENCURTADO"
               name="shortLink"
               value={shortLink}
+              showPrefix={true}
               onChange={handleChange}
-              onClick={handleCursor}
-              onKeyDown={handleKeyDown}
               type="text"
+              errorMessage={errors.short}
             />
-            { shortLink.length == 0 &&
-              <span className="flex flex-row">
-                <Warning size={8}/>
-                <span className=""></span>
-              </span>
-            }
             <button 
-              disabled={shortLink.slice(prefix.length).length == 0 || originalLink.length == 0}
+              disabled={saving}
               onClick={() => handleInsertNewLink(originalLink, shortLink)}
               className="h-[48px] w-full bg-blue-base disabled:opacity-50 text-white py-2 rounded-lg hover:bg-blue-dark transition disabled:cursor-not-allowed cursor-pointer">
-              Salvar link
+              {saving && 'Salvando...'}
+              {!saving && 'Salvar link'}
             </button>
       </div>
   );
